@@ -28,6 +28,8 @@ import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.RandomDice;
 
+import java.util.Arrays;
+
 /**
  * User: your name
  */
@@ -45,7 +47,17 @@ public class YourSolver implements Solver<Board> {
         this.board = board;
         if (board.isGameOver()) return "";
 
-        return Direction.ACT.toString();
+        return myWay();
+    }
+
+    private String myWay() {
+        if(!(board.isBarrierAt(board.getMe().getX(), board.getMe().getY()+1))){
+            return Direction.UP.toString();
+        }
+        if(!(board.isBarrierAt(board.getMe().getX()+1, board.getMe().getY()))){
+            return Direction.RIGHT.toString();
+        }
+        return Arrays.toString(new  String[]{Direction.LEFT.toString(), Direction.ACT().toString()}) ;
     }
 
     public static void main(String[] args) {
