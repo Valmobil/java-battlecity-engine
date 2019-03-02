@@ -22,11 +22,16 @@ package com.codenjoy.dojo.battlecity.client;
  * #L%
  */
 
-import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
+import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.RandomDice;
+
+import java.util.Arrays;
+import java.util.logging.Logger;
+
+import static com.codenjoy.dojo.battlecity.controller.StartSearch.StartSearchV4;
 
 /**
  * User: your name
@@ -39,19 +44,22 @@ public class YourSolver implements Solver<Board> {
     public YourSolver(Dice dice) {
         this.dice = dice;
     }
+    public static final Logger logger = Logger.getLogger(YourSolver.class.getName());
 
     @Override
     public String get(Board board) {
         this.board = board;
         if (board.isGameOver()) return "";
-
-        return Direction.ACT.toString();
+//        return Direction.ACT.toString();
+        String step = StartSearchV4(board);
+        return Arrays.toString(new String[] {step, Direction.ACT.toString()});
     }
 
     public static void main(String[] args) {
         WebSocketRunner.runClient(
                 // paste here board page url from browser after registration
-                "http://algoritmix.dan-it.kiev.ua/codenjoy-contest/board/player/n0vra0sbflkz0c5bz8o9?code=2671867589334741720",
+//                "http://algoritmix.dan-it.kiev.ua/codenjoy-contest/board/player/n0vra0sbflkz0c5bz8o9?code=2671867589334741720",
+                "http://algoritmix.dan-it.kiev.ua/codenjoy-contest/board/player/65hflip8z6g37khy31sh?code=4981973124907114953",
                 new YourSolver(new RandomDice()),
                 new Board());
     }

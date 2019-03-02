@@ -74,10 +74,13 @@ public class Board extends AbstractBoard<Elements> {
     }
 
     public Point getMe() {
-        return get(Elements.TANK_UP,
-                Elements.TANK_DOWN,
-                Elements.TANK_LEFT,
-                Elements.TANK_RIGHT).get(0);
+        try {
+            return get(Elements.TANK_UP,
+                    Elements.TANK_DOWN,
+                    Elements.TANK_LEFT,
+                    Elements.TANK_RIGHT).get(0);
+        } catch (IndexOutOfBoundsException e) {}
+        return null;
     }
 
     public List<Point> getEnemies() {
