@@ -28,10 +28,9 @@ import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.RandomDice;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
 
-import static com.codenjoy.dojo.battlecity.controller.StartSearch.StartSearchV4;
+import static com.codenjoy.dojo.battlecity.controller.StartSearch.moveAndFire;
 
 /**
  * User: your name
@@ -40,6 +39,8 @@ public class YourSolver implements Solver<Board> {
 
     private Dice dice;
     private Board board;
+    private static int[] stepsToNextShoot = {0};
+    private static String[] lastDirection = {"LEFT"};
 
     public YourSolver(Dice dice) {
         this.dice = dice;
@@ -51,9 +52,10 @@ public class YourSolver implements Solver<Board> {
         this.board = board;
         if (board.isGameOver()) return "";
 //        return Direction.ACT.toString();
-        String step = StartSearchV4(board);
-        return Arrays.toString(new String[] {step, Direction.ACT.toString()});
+       return moveAndFire(board, stepsToNextShoot, lastDirection);
     }
+
+
 
     public static void main(String[] args) {
         WebSocketRunner.runClient(

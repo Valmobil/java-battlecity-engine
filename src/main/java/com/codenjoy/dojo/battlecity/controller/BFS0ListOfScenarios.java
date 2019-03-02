@@ -26,22 +26,20 @@ public class BFS0ListOfScenarios {
 
         //Find nearest tank (AI or Competitive)
         // Step 1
-//        Log.printLog("**Step 3 - if active fury mode only - find nearest other snake**", 3);
-//        endTime = System.nanoTime();
-//        Log.printLog("Time: " + (endTime - startTime) / 1000000, 2);
-            targets.clear();
-            for (Point othTank : board.getEnemies()) {
-                    targets.add(othTank.toString());
-            }
-//            startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets, 2, null);
-            startBSSBest(board, myTank, new LinkedList<>(), bestPaths, targets, 2, null);
-
-
+        targets.clear();
+        for (Point othTank : board.getEnemies()) {
+            targets.add(othTank.toString());
         }
+//            startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets, 2, null);
+        startBSSBest(board, myTank, new LinkedList<>(), bestPaths, targets, 0, null);
+
+        // Step 2
+//        Pointboard.getBullets()
+
+    }
 
 
-
-        // Step 1
+    // Step 1
 //        Log.printLog("**Step 1 - follow own tail**", 3);
 //        if (targets.size() == 0) {
 //            targets.add(mySnake.getTail().toString());
@@ -62,7 +60,7 @@ public class BFS0ListOfScenarios {
 //            startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets, 2, null);
 //        }
 //
-        // Step 3
+    // Step 3
 //        Log.printLog("**Step 3 - if active fury mode only - find nearest other snake**", 3);
 //        endTime = System.nanoTime();
 ////        Log.printLog("Time: " + (endTime - startTime) / 1000000, 2);

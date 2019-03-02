@@ -25,7 +25,13 @@ public class BFS3FoundNextPoint {
             return checkResult;
         }
 
-        int score = 50;
+        int score = 100;
+        checkResult = isBolets(board, myTank, bestPaths, score,prevPath,visited);
+        if (checkResult != 4) {
+            return checkResult;
+        }
+
+        score = 50;
         checkResult = isTargetCheckFound(board, myTank, bestPaths, prevPath, targets, targetsCheck, visited, score, childPath, mode);
         if (checkResult != 4) {
             return checkResult;
@@ -123,16 +129,25 @@ public class BFS3FoundNextPoint {
         return 0;
     }
 
-    private static int isEnemyTank(Board board, Point myTank) {
-//        if (board.isAt(board.getEnemies())) {
-//            return 2;
-//        }
-        return 4;
-    }
+//    private static int isEnemyTank(Board board, Point myTank) {
+////        if (board.isAt(board.getEnemies())) {
+////            return 2;
+////        }
+//        return 4;
+//    }
 
     private static int isBarriers(Board board, Point myTank) {
         if (board.isBarrierAt(myTank.getX(),myTank.getY())) {
             return 2;
+        }
+        return 4;
+    }
+
+    private static int isBolets(Board board, Point myTank, Map<Double, BestPathV4> bestPaths, int score, LinkedList<Point> prevPath, HashSet<Point> visited) {
+        if (board.isBulletAt(myTank.getX(),myTank.getY())) {
+            bestPaths.put((double) score, new BestPathV4(score, prevPath, board, visited
+                    , new HashSet()));
+            return 1;
         }
         return 4;
     }
