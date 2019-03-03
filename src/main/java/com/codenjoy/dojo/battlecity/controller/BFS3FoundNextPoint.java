@@ -17,7 +17,7 @@ public class BFS3FoundNextPoint {
      * //          2 - found not eatable Point - forbid movement to it
      * //          4 - skip the point -> to next check
      */
-    public static int snakeFoundTargetPoint(Board board, Point myTank, Map<Double, BestPathV4> bestPaths, LinkedList<Point> prevPath, HashSet<Point> targets, HashSet<Point> targetsCheck, Integer mode, HashSet<Point> visited, BestPathV4 childPath) {
+    public static int snakeFoundTargetPoint(Board board, Point myTank, Map<Double, BestPathV4> bestPaths, LinkedList<Point> prevPath, HashSet<Point> targets, HashSet<Point> obstacles, Integer mode, HashSet<Point> visited, BestPathV4 childPath) {
         int checkResult;
 
         checkResult = isBarriers(board, myTank);
@@ -25,14 +25,20 @@ public class BFS3FoundNextPoint {
             return checkResult;
         }
 
-        int score = 100;
-        checkResult = isBolets(board, myTank, bestPaths, score,prevPath,visited);
+        checkResult = isObstickles(board, myTank, obstacles);
         if (checkResult != 4) {
             return checkResult;
         }
 
+
+        int score = 100;
+//        checkResult = isBolets(board, myTank, bestPaths, score,prevPath,visited);
+//        if (checkResult != 4) {
+//            return checkResult;
+//        }
+
         score = 50;
-        checkResult = isTargetCheckFound(board, myTank, bestPaths, prevPath, targets, targetsCheck, visited, score, childPath, mode);
+        checkResult = isTargetCheckFound(board, myTank, bestPaths, prevPath, targets, visited, score, childPath, mode);
         if (checkResult != 4) {
             return checkResult;
         }
@@ -129,6 +135,14 @@ public class BFS3FoundNextPoint {
         return 0;
     }
 
+    private static int isObstickles(Board board, Point myTank, HashSet<Point> obstacles) {
+        if (obstacles.contains(myTank)) {
+//            System.out.println(obstacles.toString());
+            return 2;
+        }
+        return 4;
+    }
+
 //    private static int isEnemyTank(Board board, Point myTank) {
 ////        if (board.isAt(board.getEnemies())) {
 ////            return 2;
@@ -157,12 +171,12 @@ public class BFS3FoundNextPoint {
      */
     public static int isTargetCheckFound(Board board, Point myTank, Map<Double, BestPathV4> bestPaths
             , LinkedList<Point> prevPath, HashSet<Point> targets
-            , HashSet<Point> targetsCheck, HashSet<Point> visited, int score, BestPathV4 childPath, Integer mode) {
+            , HashSet<Point> visited, int score, BestPathV4 childPath, Integer mode) {
 //        if (prevPath.size() > 15 && mode == 3) {
 //            Log.printLog("Snake=>Targeted element not found due to MAX Steps = 20. Head:" + mySnake.getHead() + " Targets: " + targets + " Targets Check: " + targetsCheck, 2);
 //            return 1;
 //        }
-        if (targetsCheck.contains(myTank)) {
+        if (targets.contains(myTank)) {
 //            System.out.println("Utils=>isTargetCheckFound: Target point found!" + mySnake.getHead());
             boolean tailIsFound = false;
             if (mode == 1 || mode == 2) {

@@ -2,6 +2,7 @@ package com.codenjoy.dojo.battlecity.controller;
 
 import com.codenjoy.dojo.battlecity.client.Board;
 import com.codenjoy.dojo.battlecity.model.BestPathV4;
+import com.codenjoy.dojo.battlecity.model.BulletsList;
 import com.codenjoy.dojo.battlecity.model.Elements;
 import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.Point;
@@ -11,25 +12,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import static com.codenjoy.dojo.battlecity.controller.BFS0FightModule.fireAnalysis;
 import static com.codenjoy.dojo.battlecity.controller.BFS0ListOfScenarios.startTheBestPathSearch;
 
 public class StartSearch {
 
 
-
-    public static String moveAndFire(Board board, int[] stepsToNextShoot, String[] lastDirection) {
+    public static String moveAndFire(Board board, int[] stepsToNextShoot, String[] lastDirection, BulletsList bulletsList) {
         //If shoot is happend
         Point myTank = board.getMe();
         myTank.change(Direction.valueOf(lastDirection[0]));
-        if (board.isAt(myTank, Elements.BULLET,Elements.BANG)) {
+        if (board.isAt(myTank, Elements.BULLET, Elements.BANG)) {
             stepsToNextShoot[0] = 3;
         }
 
         Direction newDirection = Direction.valueOf(startSearchNextStep(board));
         stepsToNextShoot[0]--;
-        if (stepsToNextShoot[0] < 1 ) {
+        if (stepsToNextShoot[0] < 1) {
             //Fire
-            if (fireAnalysis(board, newDirection) == 1) {
+            if (fireAnalysis(board, newDirection, bulletsList, lastDirection) == 1) {
                 //Please shoot
                 return Arrays.toString(new String[]{newDirection.toString(), Direction.ACT.toString()});
             }
@@ -37,19 +38,7 @@ public class StartSearch {
         return newDirection.toString();
     }
 
-    private static int fireAnalysis(Board board, Direction newDirection) {
-        Point nextShot = board.getMe();
-        while (!board.isBarrierAt(nextShot.getX(), nextShot.getY())) {
-            if (board.isAt(nextShot, Elements.BULLET,
-                    Elements.AI_TANK_LEFT, Elements.AI_TANK_RIGHT, Elements.AI_TANK_UP, Elements.AI_TANK_DOWN,
-                    Elements.OTHER_TANK_LEFT, Elements.OTHER_TANK_RIGHT, Elements.OTHER_TANK_UP, Elements.OTHER_TANK_DOWN)) {
-                return 1;
-            }
-            nextShot.setX(newDirection.changeX(nextShot.getX()));
-            nextShot.setY(newDirection.changeY(nextShot.getY()));
-        }
-        return 0;
-    }
+
 
     //    public static String StartAppV4(Board board, MySnakeV4 mySnake, SnakeListV4 othSnakes) {
     public static String startSearchNextStep(Board board) {
@@ -68,14 +57,15 @@ public class StartSearch {
         //Build fruitful paths
 //        ConcurrentSkipListMap<Double, BestPathV4> bestPaths = new ConcurrentSkipListMap<>();
         ConcurrentSkipListMap<Double, BestPathV4> bestPaths = new ConcurrentSkipListMap<>();
-        HashSet<String> targets = new HashSet<>();
+        HashSet<Point> targets = new HashSet<>();
+        HashSet<Point> obstacles = new HashSet<>();
 //        startTheBestPathSearch(board, mySnake, othSnakes, bestPaths, targets, startTime);
-        startTheBestPathSearch(board, myTank, bestPaths, targets, startTime);
+        startTheBestPathSearch(board, myTank, bestPaths, targets, obstacles, startTime);
 
         //Analyse list of built paths
         if (bestPaths.isEmpty()) {
             System.out.println("Snake=>StartAppV4: Best Path Not Found");
-            return Direction.STOP.toString();
+            return Direction.random().toString();
         }
 
 //        Print paths for Debug purposes
@@ -95,7 +85,7 @@ public class StartSearch {
     /**
      * Generate direction for one next step to point
      */
-    static String getDirectionToNextPoint(Point fromPoint, Point toPoint) {
+    public static String getDirectionToNextPoint(Point fromPoint, Point toPoint) {
         if (fromPoint.getY() < toPoint.getY()) {
             return Direction.UP.toString();
         }

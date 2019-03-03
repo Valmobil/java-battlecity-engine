@@ -2,7 +2,10 @@ package com.codenjoy.dojo.battlecity.controller;
 
 import com.codenjoy.dojo.battlecity.client.Board;
 import com.codenjoy.dojo.battlecity.model.BestPathV4;
+import com.codenjoy.dojo.battlecity.model.Elements;
+import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.Point;
+import com.codenjoy.dojo.services.PointImpl;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -15,7 +18,7 @@ public class BFS0ListOfScenarios {
      * Launcher for paths search
      */
 //    private static void startTheBestPathSearch(Board board, MySnakeV4 mySnake, SnakeListV4 othSnakes, ConcurrentSkipListMap<Double, BestPathV4> bestPaths, HashSet<String> targets, long startTime) {
-    public static void startTheBestPathSearch(Board board, Point myTank, ConcurrentSkipListMap<Double, BestPathV4> bestPaths, HashSet<String> targets, long startTime) {
+    public static void startTheBestPathSearch(Board board, Point myTank, ConcurrentSkipListMap<Double, BestPathV4> bestPaths, HashSet<Point> targets, HashSet<Point> obstacles, long startTime) {
 
         // Targets collection can contains further commands for moving objects
         // - mySnakeBitTail - bit my snake tail
@@ -27,19 +30,44 @@ public class BFS0ListOfScenarios {
         //Find nearest tank (AI or Competitive)
         // Step 1
         targets.clear();
-        for (Point othTank : board.getEnemies()) {
-            targets.add(othTank.toString());
-        }
-//            startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets, 2, null);
-        startBSSBest(board, myTank, new LinkedList<>(), bestPaths, targets, 0, null);
+        fillTargetsAndObstacles(board, targets, obstacles);
+        startBSSBest(board, myTank, new LinkedList<Point>(), bestPaths, targets, 0, null, obstacles);
 
         // Step 2
 //        Pointboard.getBullets()
 
     }
 
+    private static void fillTargetsAndObstacles(Board board, HashSet<Point> targets, HashSet<Point> obstacles) {
+        for (Point othTank : board.getEnemies()) {
+            targets.add(othTank);
 
-    // Step 1
+            Point nextTankStep = othTank;
+            for (int i = 0; i < 2; i++) {
+                nextTankStep = new PointImpl(nextTankStep);
+                if (board.isAt(othTank, Elements.OTHER_TANK_DOWN, Elements.AI_TANK_DOWN)) {
+                    nextTankStep.change(Direction.DOWN);
+                    obstacles.add(nextTankStep);
+                }
+                if (board.isAt(othTank, Elements.OTHER_TANK_UP, Elements.AI_TANK_UP)) {
+                    nextTankStep.change(Direction.UP);
+                    obstacles.add(nextTankStep);
+                }
+                if (board.isAt(othTank, Elements.OTHER_TANK_RIGHT, Elements.AI_TANK_RIGHT)) {
+                    nextTankStep.change(Direction.RIGHT);
+                    obstacles.add(nextTankStep);
+                }
+                if (board.isAt(othTank, Elements.OTHER_TANK_LEFT, Elements.AI_TANK_LEFT)) {
+                    nextTankStep.change(Direction.LEFT);
+                    obstacles.add(nextTankStep);
+                }
+            }
+        }
+    }
+
+
+
+// Step 1
 //        Log.printLog("**Step 1 - follow own tail**", 3);
 //        if (targets.size() == 0) {
 //            targets.add(mySnake.getTail().toString());
@@ -60,7 +88,7 @@ public class BFS0ListOfScenarios {
 //            startBSSBest(board, mySnake, new LinkedList<>(), othSnakes, bestPaths, targets, 2, null);
 //        }
 //
-    // Step 3
+// Step 3
 //        Log.printLog("**Step 3 - if active fury mode only - find nearest other snake**", 3);
 //        endTime = System.nanoTime();
 ////        Log.printLog("Time: " + (endTime - startTime) / 1000000, 2);
@@ -162,4 +190,4 @@ public class BFS0ListOfScenarios {
 //        }
 //    }
 
-}
+        }

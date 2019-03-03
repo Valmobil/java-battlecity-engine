@@ -10,22 +10,22 @@ package com.codenjoy.dojo.battlecity.client;
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
 
+import com.codenjoy.dojo.battlecity.model.BulletsList;
 import com.codenjoy.dojo.client.Solver;
 import com.codenjoy.dojo.client.WebSocketRunner;
 import com.codenjoy.dojo.services.Dice;
-import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.RandomDice;
 
 import java.util.logging.Logger;
@@ -41,10 +41,12 @@ public class YourSolver implements Solver<Board> {
     private Board board;
     private static int[] stepsToNextShoot = {0};
     private static String[] lastDirection = {"LEFT"};
+    private static BulletsList bulletsList = new BulletsList();
 
     public YourSolver(Dice dice) {
         this.dice = dice;
     }
+
     public static final Logger logger = Logger.getLogger(YourSolver.class.getName());
 
     @Override
@@ -52,16 +54,18 @@ public class YourSolver implements Solver<Board> {
         this.board = board;
         if (board.isGameOver()) return "";
 //        return Direction.ACT.toString();
-       return moveAndFire(board, stepsToNextShoot, lastDirection);
+        bulletsList.bulletListUpdate(board);
+        System.out.println(bulletsList);
+        return moveAndFire(board, stepsToNextShoot, lastDirection,bulletsList);
     }
-
 
 
     public static void main(String[] args) {
         WebSocketRunner.runClient(
                 // paste here board page url from browser after registration
 //                "http://algoritmix.dan-it.kiev.ua/codenjoy-contest/board/player/n0vra0sbflkz0c5bz8o9?code=2671867589334741720",
-                "http://algoritmix.dan-it.kiev.ua/codenjoy-contest/board/player/65hflip8z6g37khy31sh?code=4981973124907114953",
+//                "http://algoritmix.dan-it.kiev.ua/codenjoy-contest/board/player/65hflip8z6g37khy31sh?code=4981973124907114953",
+                "http://algoritmix.dan-it.kiev.ua/codenjoy-contest/board/player/k3yqexorpm2taz23t8hf?code=5491307152011083824",
                 new YourSolver(new RandomDice()),
                 new Board());
     }

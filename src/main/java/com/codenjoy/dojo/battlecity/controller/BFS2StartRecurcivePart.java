@@ -16,7 +16,7 @@ public class BFS2StartRecurcivePart {
     /**
      * Body ot BFS Recursion
      */
-    public static void recursiveBFSBest(Board board, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, Map<Double, BestPathV4> bestPaths, HashSet<String> targets, Integer mode, BestPathV4 childPath) {
+    public static void recursiveBFSBest(Board board, HashSet<Point> visited, Queue<Point> queue, Queue<LinkedList<Point>> queuePath, Queue<Integer> queueLevel, Map<Double, BestPathV4> bestPaths, HashSet<Point> targets, Integer mode, BestPathV4 childPath, HashSet<Point> obstacles) {
 
         if (queue.isEmpty()) {
             return;
@@ -35,25 +35,25 @@ public class BFS2StartRecurcivePart {
 //        newMySnake.setNextStep(myTank);
 
         //Change tail position after snake recalculation
-        HashSet<Point> targetsDirection = new HashSet<>();
-        HashSet<Point> targetsCheck = new HashSet<>();
-        if (targets.size() > 0) {
-            replaceSpecialStringsWithPoints(targets, targetsDirection, targetsCheck);
-        }
+//        HashSet<Point> targetsDirection = new HashSet<>();
+//        HashSet<Point> targetsCheck = new HashSet<>();
+//        if (targets.size() > 0) {
+//            replaceSpecialStringsWithPoints(targets, targetsDirection, targetsCheck);
+//        }
         boolean skipPoint = false;
 //        if (mySnake.getTail().getX() == 0) {
 //            System.out.println();
 //        }
 
         int result = snakeFoundTargetPoint(board, myTank, bestPaths, prevPath,
-                targetsDirection, targetsCheck, mode, visited, childPath);
+                targets, obstacles, mode, visited, childPath);
 //        Log.printLog("Result: " + result, 0);
 
         if (result != 0) {
             if (result == 1) {
                 //end search and save result
-                logger.info("~~~~~");
-                logger.info("recursiveBFSBest=> BestPathes: " + bestPaths.toString());
+//                logger.info("~~~~~");
+//                logger.info("recursiveBFSBest=> BestPathes: " + bestPaths.toString());
                 queue.clear();
                 return;
             } else {
@@ -74,7 +74,7 @@ public class BFS2StartRecurcivePart {
                 visited.add(child);
             }
         }
-        recursiveBFSBest(board, visited, queue, queuePath, queueLevel, bestPaths, targets, mode, childPath);
+        recursiveBFSBest(board, visited, queue, queuePath, queueLevel, bestPaths, targets, mode, childPath, obstacles);
     }
 
 
@@ -96,7 +96,7 @@ public class BFS2StartRecurcivePart {
         getEmptyChildAddNextPoint(board, visited, childs, nextPoint);
 
         return childs;
-}
+    }
 
     private static void getEmptyChildAddNextPoint(Board board, HashSet<Point> visited, List<Point> childs, Point nextPoint) {
         if (!visited.contains(nextPoint)) {

@@ -2,7 +2,6 @@ package com.codenjoy.dojo.battlecity.controller;
 
 import com.codenjoy.dojo.battlecity.client.Board;
 import com.codenjoy.dojo.battlecity.model.BestPathV4;
-import com.codenjoy.dojo.battlecity.model.Tanks;
 import com.codenjoy.dojo.services.Point;
 
 import java.util.*;
@@ -11,7 +10,7 @@ import static com.codenjoy.dojo.battlecity.controller.BFS2StartRecurcivePart.rec
 
 public class BFS1StartSearchBestPath {
 //    static void startBSSBest(Board board, MySnakeV4 mySnake, LinkedList<Point> additionalPath, SnakeListV4 otherSnakes, Map<Double, BestPathV4> bestPaths, HashSet<String> targets, Integer mode, BestPathV4 childPath) {
-    static void startBSSBest(Board board, Point myTank, LinkedList<Point> additionalPath, Map<Double, BestPathV4> bestPaths, HashSet<String> targets, Integer mode, BestPathV4 childPath) {
+    static void startBSSBest(Board board, Point myTank, LinkedList<Point> additionalPath, Map<Double, BestPathV4> bestPaths, HashSet<Point> targets, Integer mode, BestPathV4 childPath, HashSet<Point> obstacles) {
         // Mode can be:
         // - 0 way to any fruitful point
         // - 1 way directly to point (eating apple&gold and avoiding stones etc)
@@ -36,6 +35,6 @@ public class BFS1StartSearchBestPath {
         HashSet<Point> visited = new HashSet<>();
 
         //Start recursion
-        recursiveBFSBest(board, visited, queue, queuePath, queueLevel, bestPaths, targets, mode, childPath);
+        recursiveBFSBest(board, visited, queue, queuePath, queueLevel, bestPaths, targets,  mode, childPath, obstacles);
     }
 }
